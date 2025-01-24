@@ -1,118 +1,340 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import { Inter } from 'next/font/google';
+import { motion } from 'framer-motion';
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import WavyBackground from '@/components/WavyBackground';
+import { FaTwitter, FaTelegramPlane, FaDiscord, FaBook, FaChevronDown } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { Environment, OrbitControls } from '@react-three/drei';
+import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import { BitcoinModel } from '@/components/BitcoinModel';
+import * as THREE from 'three';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+  const [btcPrice, setBtcPrice] = useState(null);
+  const [showArrow, setShowArrow] = useState(true);
+
+  useEffect(() => {
+    const fetchBtcPrice = () => {
+      fetch('https://api.coindesk.com/v1/bpi/currentprice/BTC.json')
+        .then(response => response.json())
+        .then(data => setBtcPrice(data.bpi.USD.rate));
+    };
+
+    fetchBtcPrice();
+    const intervalId = setInterval(fetchBtcPrice, 5000);
+
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setShowArrow(false);
+      } else {
+        setShowArrow(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className={`flex min-h-screen flex-col items-center ${inter.className}`}>
+      <Head>
+        <title>CHIMERA BTC</title>
+        <link rel="icon" href="/chimera-icon.svg" />
+      </Head>
+
+      {/* Header Bar */}
+      <motion.header 
+        className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm h-16"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="max-w-7xl mx-auto h-full px-4 flex justify-between items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            By{" "}
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+              src="/chimera-wide.svg"
+              alt="Chimera"
+              width={180}
+              height={40}
+              className="h-8 w-auto"
             />
-          </a>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Link href="/your-dapp">
+              <motion.button
+                className="px-6 py-2 text-base font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-lg shadow-lg cursor-pointer"
+                whileHover={{ 
+                  scale: 1.05,
+                  transition: { duration: 0.3 },
+                  filter: 'brightness(1.1)'
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Launch dApp
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
-      </div>
+      </motion.header>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      {/* Hero Section with Wavy Background */}
+      <WavyBackground className="fixed inset-0 w-full h-full z-[-1]" />
+      
+      {/* Hero Section */}
+      <section className="min-h-screen w-full flex items-center justify-center px-8">
+        <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Left Column - Header */}
+          <motion.div
+            className="flex flex-col space-y-4 lg:pr-0"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.4 }}
+          >
+            <div className="text-center lg:text-right">
+              <motion.h1
+                className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              >
+                The first Hybrid<br />
+                <span 
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFAA00] via-[#FFD700] to-[#FFAA00]"
+                  style={{ textShadow: "rgba(255, 170, 0, 0.5) 0px 0px 10px", lineHeight: "1.2", paddingBottom: "0.2em" }}
+                >
+                  DeFi Platform
+                </span><br />
+                on Bitcoin
+              </motion.h1>
+            </div>
+          </motion.div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+          {/* Right Column - 3D Object */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="relative w-full h-[40vh]"
+            style={{ 
+              touchAction: 'none',
+              cursor: 'grab',
+              zIndex: 10,
+              position: 'relative'
+            }}
+          >
+            <div className="absolute inset-0" style={{ pointerEvents: 'auto' }}>
+              <Canvas
+                camera={{ position: [0, 0, 4], fov: 45 }}
+                style={{
+                  width: '100%',
+                  height: '100%'
+                }}
+                gl={{
+                  alpha: true,
+                  antialias: true,
+                  preserveDrawingBuffer: true,
+                  toneMapping: THREE.ACESFilmicToneMapping,
+                  toneMappingExposure: 0.25
+                }}
+              >
+                {/* Lighting setup for better highlights */}
+                <ambientLight intensity={0.008} />
+                <directionalLight
+                  position={[5, 5, 5]}
+                  intensity={0.04}
+                  castShadow
+                />
+                
+                {/* High quality environment map with increased contrast */}
+                <Environment
+                  preset="studio"
+                  background={false}
+                  resolution={256}
+                  intensity={0.1}
+                />
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+                <BitcoinModel />
+                <OrbitControls
+                  makeDefault
+                  enableZoom={false}
+                  enablePan={false}
+                  rotateSpeed={0.7}
+                  dampingFactor={0.05}
+                  enableDamping
+                />
+                
+                <EffectComposer>
+                  <Bloom 
+                    intensity={0.5}
+                    luminanceThreshold={0.7}
+                    luminanceSmoothing={0.3}
+                    mipmapBlur
+                    radius={0.4}
+                  />
+                </EffectComposer>
+              </Canvas>
+            </div>
+          </motion.div>
+        </div>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+        {/* Blinking Down Arrow */}
+        {showArrow && (
+          <motion.div 
+            className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ 
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <FaChevronDown className="text-white text-4xl animate-pulse" />
+          </motion.div>
+        )}
+      </section>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      {/* Gradient Background */}
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/30 to-transparent"
+        style={{
+          top: '20%',  
+          height: '60%',
+          opacity: 0.4,
+        }}
+      />
+
+      {/* What is Hybrid DeFi Section */}
+      <section className="w-full py-24 px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <span 
+                className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFAA00] via-[#FFD700] to-[#FFAA00]"
+                style={{ textShadow: "rgba(255, 170, 0, 0.5) 0px 0px 10px", lineHeight: "1.2", paddingBottom: "0.2em" }}
+              >
+                What is Hybrid DeFi?
+              </span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Hybrid DeFi unifies the entire onchain ecosystem into one seamless trading experience, including both non-fungible and fungible assets. <br></br><br></br> Our protocol enables tokenized Inscriptions as well as trustless Index Funds for the top digital assets on BTC.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="bg-black/30 backdrop-blur-sm rounded-xl p-8 border border-white/10"
+            >
+              <h3 className="text-2xl font-bold mb-4">Tokenized Inscriptions</h3>
+              <p className="text-gray-300">
+                Gain exposure to your favorite Digital Artifacts on BTC by investing in their floor index tokens. Instantly trade in/out of your positions via our Hybrid AMM DEX.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="bg-black/30 backdrop-blur-sm rounded-xl p-8 border border-white/10"
+            >
+              <h3 className="text-2xl font-bold mb-4">Ordinals/Runes Index Funds</h3>
+              <p className="text-gray-300">
+                Invest in the top projects of entire asset classes such as the Ordinals or Runes protocols with our market-cap weighted, automatically rebalanced Index Funds.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="bg-black/30 backdrop-blur-sm rounded-xl p-8 border border-white/10"
+            >
+              <h3 className="text-2xl font-bold mb-4">LP to Earn</h3>
+              <p className="text-gray-300">
+                Provide liquidity for our Index Fund tokens on our Hybrid AMM DEX and earn trading fees. This means you can now earn passive yield on your Ordinals Inscriptions & more.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="w-full py-20 pb-40 bg-gradient-to-b from-black via-orange-800/10 to-black">
+        <div className="max-w-6xl mx-auto px-4">
+          <motion.h2 
+            className="text-4xl font-bold text-white text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            Platform Metrics
+          </motion.h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              { value: "$250M+", label: "Total Value Locked" },
+              { value: "50K+", label: "Active Users" },
+              { value: "99.99%", label: "Uptime" },
+              { value: "24/7", label: "Support" }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                className="text-center"
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
+                <div className="text-gray-300">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="fixed bottom-0 w-full h-16 bg-black border-t border-gray-400 flex items-center justify-between px-4 z-50">
+        <div className="flex items-center text-gray-400">
+          <Image src="/btclogo.png" alt="Bitcoin Logo" width={30} height={30} />
+          <span className="ml-2">{btcPrice ? `$${btcPrice}` : 'Loading...'}</span>
+        </div>
+        <div className="flex items-center border-l border-gray-400 pl-4">
+          <Link href="https://twitter.com/chimeraBTC" className="text-gray-400 mx-2 hover:text-white"><FaTwitter size={24} /></Link>
+          <Link href="https://t.me/gh0stc0in" className="text-gray-400 mx-2 hover:text-white"><FaTelegramPlane size={24} /></Link>
+          <Link href="https://discord.gg/gh0stlabs" className="text-gray-400 mx-2 hover:text-white"><FaDiscord size={24} /></Link>
+          <Link href="https://docs.gh0stlabs.io" className="text-gray-400 mx-2 hover:text-white"><FaBook size={24} /></Link>
+        </div>
+      </footer>
     </main>
   );
 }
