@@ -1,9 +1,12 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import { Html, Head, Main, NextScript } from 'next/document';
 
 export default function Document() {
   return (
     <Html lang="en">
-      <Head />
+      <Head>
+        <link rel="icon" href="/chimera-icon.svg" />
+        <meta name="description" content="CHIMERA DeFi" />
+      </Head>
       <body>
         <Main />
         <NextScript />
