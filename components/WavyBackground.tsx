@@ -35,6 +35,7 @@ export const NewBackground = ({
     ctx: any,
     canvas: any;
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationId = useRef<number>();
 
   const getSpeed = () => {
     switch (speed) {
@@ -54,12 +55,6 @@ export const NewBackground = ({
     h = ctx.canvas.height = window.innerHeight;
     ctx.filter = `blur(${blur}px)`;
     nt = 0;
-    window.onresize = function () {
-      w = ctx.canvas.width = window.innerWidth;
-      h = ctx.canvas.height = window.innerHeight;
-      ctx.filter = `blur(${blur}px)`;
-    };
-    render();
   };
 
   const waveColors = colors ?? ["#FFA500", "#FF4500", "#FF6347"]; // Orange, Red-Orange, Yellow-Orange
@@ -78,19 +73,40 @@ export const NewBackground = ({
     }
   };
 
-  let animationId: number;
   const render = () => {
     ctx.fillStyle = backgroundFill || "black";
     ctx.globalAlpha = waveOpacity;
     ctx.fillRect(0, 0, w, h);
     drawWave(3); // Reduced number of waves for a more feathered look
-    animationId = requestAnimationFrame(render);
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      if (ctx && canvas) {
+        w = ctx.canvas.width = window.innerWidth;
+        h = ctx.canvas.height = window.innerHeight;
+        ctx.filter = `blur(${blur}px)`;
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [blur]);
+
+  useEffect(() => {
     init();
+
+    const animate = () => {
+      animationId.current = requestAnimationFrame(animate);
+      render();
+    };
+
+    animate();
+
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationId.current) {
+        cancelAnimationFrame(animationId.current);
+      }
     };
   }, []);
 

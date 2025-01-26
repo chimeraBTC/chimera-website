@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbars but keep functionality */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+/* Chrome, Safari and Opera */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure body also has no scrollbars */
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

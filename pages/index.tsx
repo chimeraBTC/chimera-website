@@ -69,8 +69,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
-      <main className={`flex min-h-screen flex-col items-center ${inter.className}`}>
+    <div className="overflow-hidden">
+      <main className={`flex min-h-screen flex-col items-center ${inter.className} overflow-x-hidden`}>
         <Head>
           <title>CHIMERA BTC</title>
           <link rel="icon" href="/chimera-icon.svg" />
@@ -724,8 +724,8 @@ export default function Home() {
                 <div className="flex items-center border-l border-gray-800 pl-4">
                   <a href="https://twitter.com/chimeraBTC" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaTwitter size={24} /></a>
                   {/* Hidden for now, will be restored later
-                  <a href="https://discord.gg/gh0stlabs" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaDiscord size={24} /></a>
-                  <a href="https://docs.gh0stlabs.io" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaBook size={24} /></a>
+                  <a href="https://discord.gg/chimera" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaDiscord size={24} /></a>
+                  <a href="https://docs.chimera.io" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaBook size={24} /></a>
                   */}
                 </div>
               </footer>
