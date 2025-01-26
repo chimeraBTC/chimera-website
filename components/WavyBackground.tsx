@@ -11,7 +11,7 @@ export const NewBackground = ({
   waveWidth = 100,
   backgroundFill,
   blur = 30,
-  speed = "fast",
+  speed = "slow",
   waveOpacity = 0.3,
   ...props
 }: {
@@ -107,7 +107,7 @@ export const NewBackground = ({
   return (
     <div
       className={cn(
-        "absolute h-full w-full inset-0 overflow-hidden",
+        "fixed h-full w-full inset-0 overflow-hidden",
         containerClassName
       )}
     >
