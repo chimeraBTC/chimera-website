@@ -26,16 +26,14 @@ export const NewBackground = ({
   waveOpacity?: number;
   [key: string]: any;
 }) => {
-  const noise = createNoise3D();
-  let w: number,
-    h: number,
-    nt: number,
-    i: number,
-    x: number,
-    ctx: any,
-    canvas: any;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationId = useRef<number>();
+  const noise = createNoise3D();
+  const wRef = useRef<number>(0);
+  const hRef = useRef<number>(0);
+  const ntRef = useRef<number>(0);
+  const ctxRef = useRef<any>(null);
+  const canvasInstanceRef = useRef<any>(null);
 
   const getSpeed = () => {
     switch (speed) {
@@ -49,70 +47,65 @@ export const NewBackground = ({
   };
 
   const init = () => {
-    canvas = canvasRef.current;
-    ctx = canvas.getContext("2d");
-    w = ctx.canvas.width = window.innerWidth;
-    h = ctx.canvas.height = window.innerHeight;
-    ctx.filter = `blur(${blur}px)`;
-    nt = 0;
+    canvasInstanceRef.current = canvasRef.current;
+    ctxRef.current = canvasInstanceRef.current.getContext("2d");
+    wRef.current = ctxRef.current.canvas.width = window.innerWidth;
+    hRef.current = ctxRef.current.canvas.height = window.innerHeight;
+    ctxRef.current.filter = `blur(${blur}px)`;
+    ntRef.current = 0;
   };
 
   const waveColors = colors ?? ["#FFA500", "#FF4500", "#FF6347"]; // Orange, Red-Orange, Yellow-Orange
   const drawWave = (n: number) => {
-    nt += getSpeed();
-    for (i = 0; i < n; i++) {
-      ctx.beginPath();
-      ctx.lineWidth = waveWidth;
-      ctx.strokeStyle = waveColors[i % waveColors.length];
-      for (x = 0; x < w; x += 5) {
-        var y = noise(x / 400, 0.3 * i, nt) * 200; // Adjusted frequency and amplitude
-        ctx.lineTo(x, y + h * 0.5); // adjust for height, currently at 50% of the container
+    ntRef.current += getSpeed();
+    for (let i = 0; i < n; i++) {
+      ctxRef.current.beginPath();
+      ctxRef.current.lineWidth = waveWidth;
+      ctxRef.current.strokeStyle = waveColors[i % waveColors.length];
+      for (let x = 0; x < wRef.current; x += 5) {
+        var y = noise(x / 400, 0.3 * i, ntRef.current) * 200;
+        ctxRef.current.lineTo(x, y + hRef.current * 0.5);
       }
-      ctx.stroke();
-      ctx.closePath();
+      ctxRef.current.stroke();
+      ctxRef.current.closePath();
     }
   };
 
   const render = () => {
-    ctx.fillStyle = backgroundFill || "black";
-    ctx.globalAlpha = waveOpacity;
-    ctx.fillRect(0, 0, w, h);
-    drawWave(3); // Reduced number of waves for a more feathered look
+    ctxRef.current.fillStyle = backgroundFill || "black";
+    ctxRef.current.globalAlpha = waveOpacity;
+    ctxRef.current.fillRect(0, 0, wRef.current, hRef.current);
+    drawWave(3);
   };
 
   useEffect(() => {
     const handleResize = () => {
-      if (ctx && canvas) {
-        w = ctx.canvas.width = window.innerWidth;
-        h = ctx.canvas.height = window.innerHeight;
-        ctx.filter = `blur(${blur}px)`;
-      }
+      wRef.current = ctxRef.current.canvas.width = window.innerWidth;
+      hRef.current = ctxRef.current.canvas.height = window.innerHeight;
+      ctxRef.current.filter = `blur(${blur}px)`;
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [blur]);
 
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   useEffect(() => {
     init();
-
     const animate = () => {
       animationId.current = requestAnimationFrame(animate);
       render();
     };
-
     animate();
-
     return () => {
       if (animationId.current) {
         cancelAnimationFrame(animationId.current);
       }
     };
-  }, []);
+  }, []); // Intentionally empty to prevent reinitialize on scroll
 
   const [isSafari, setIsSafari] = useState(false);
   useEffect(() => {
-    // I'm sorry but i have got to support it on safari.
     setIsSafari(
       typeof window !== "undefined" &&
         navigator.userAgent.includes("Safari") &&

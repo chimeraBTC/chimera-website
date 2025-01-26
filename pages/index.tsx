@@ -550,7 +550,7 @@ export default function Home() {
                             Trading Made Simple
                           </motion.h3>
                           <p className="text-gray-300">
-                            We've removed the friction and complexity of trading BTC assets, making it effortless to invest in the BTC Layer 1 ecosystem.
+                            We&apos;ve removed the friction and complexity of trading BTC assets, making it effortless to invest in the BTC Layer 1 ecosystem.
                           </p>
                         </motion.div>
 
