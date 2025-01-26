@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import WavyBackground from '@/components/WavyBackground';
 import dynamic from 'next/dynamic';
-import { FaTwitter, FaTelegramPlane, FaDiscord, FaBook, FaChevronDown } from 'react-icons/fa';
+import { FaTwitter, FaDiscord, FaBook, FaChevronDown } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment, OrbitControls } from '@react-three/drei';
@@ -20,17 +20,37 @@ const WaveBackground = dynamic(() => import('@/components/WaveBackground'), { ss
 
 export default function Home() {
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
+  const [mempoolFee, setMempoolFee] = useState<number | null>(null);
   const [showArrow, setShowArrow] = useState(true);
 
   useEffect(() => {
-    const fetchBtcPrice = () => {
-      fetch('https://api.coindesk.com/v1/bpi/currentprice/BTC.json')
-        .then(response => response.json())
-        .then(data => setBtcPrice(data.bpi.USD.rate_float));
+    const fetchBtcPrice = async () => {
+      try {
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+        const data = await response.json();
+        setBtcPrice(data.bitcoin.usd);
+      } catch (error) {
+        console.error('Error fetching BTC price:', error);
+      }
+    };
+
+    const fetchMempoolFees = async () => {
+      try {
+        const response = await fetch('https://mempool.space/api/v1/fees/recommended');
+        const data = await response.json();
+        setMempoolFee(data.halfHourFee); // Using half hour fee as a middle ground
+      } catch (error) {
+        console.error('Error fetching mempool fees:', error);
+      }
     };
 
     fetchBtcPrice();
-    const intervalId = setInterval(fetchBtcPrice, 5000);
+    fetchMempoolFees();
+
+    const interval = setInterval(() => {
+      fetchBtcPrice();
+      fetchMempoolFees();
+    }, 60000);
 
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -41,8 +61,9 @@ export default function Home() {
     };
 
     window.addEventListener('scroll', handleScroll);
+
     return () => {
-      clearInterval(intervalId);
+      clearInterval(interval);
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
@@ -57,19 +78,10 @@ export default function Home() {
 
         {/* Content Container with Vignette */}
         <div className="relative w-full min-h-screen">
-          {/* Vignette/Shadow Effect */}
-          <div 
-            className="fixed inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.5) 30%, transparent 70%)',
-              zIndex: 0
-            }}
-          />
-
           {/* Fixed Wavy Background that stays throughout the page */}
           <div className="fixed inset-0 w-full h-full">
             <WavyBackground className="w-full h-full" />
-            <div className="absolute inset-0 bg-black opacity-55" />
+            <div className="absolute inset-0 bg-black opacity-50" />
           </div>
 
           {/* Content */}
@@ -466,7 +478,7 @@ export default function Home() {
                             Making Blue Chips Accessible
                           </h3>
                           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                            Our hybrid inscription protocol fractionalizes the top Ordinal collections by market cap, enabling instant trading of digital artifacts through floor index tokens.
+                            Our hybrid inscription protocol fractionalizes the top Ordinal collections, enabling instant trading of digital artifacts through floor index tokens.
                           </p>
                           <ul className="space-y-4 text-gray-300">
                             <li className="flex items-center">
@@ -686,21 +698,35 @@ export default function Home() {
               </section>
 
               {/* Single Footer */}
-              <footer className="fixed bottom-0 w-full h-16 bg-black border-t border-gray-400 flex items-center justify-between px-4 z-50">
-                <div className="flex items-center text-gray-400">
-                  <Image src="/btclogo.png" alt="Bitcoin Logo" width={30} height={30} />
-                  <span className="ml-2">
-                    {btcPrice ? `$${btcPrice.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
-                    })}` : 'Loading...'}
-                  </span>
+              <footer className="fixed bottom-0 w-full h-16 bg-black/50 backdrop-blur-sm border-t border-gray-800 flex items-center justify-between px-4 z-50">
+                <div className="flex items-center text-gray-400 space-x-4">
+                  <div className="flex items-center">
+                    <Image src="/btclogo.png" alt="Bitcoin Logo" width={20} height={20} />
+                    <span className="ml-2">
+                      {btcPrice ? `$${btcPrice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}` : 'Loading...'}
+                    </span>
+                  </div>
+                  <div className="h-4 w-px bg-gray-800"></div>
+                  <div className="flex items-center">
+                    <Image 
+                      src="/speed.svg" 
+                      alt="Fee Rate" 
+                      width={24} 
+                      height={24} 
+                      className="mr-2"
+                    />
+                    <span>{mempoolFee ? `${mempoolFee} sats/vB` : 'Loading...'}</span>
+                  </div>
                 </div>
-                <div className="flex items-center border-l border-gray-400 pl-4">
+                <div className="flex items-center border-l border-gray-800 pl-4">
                   <a href="https://twitter.com/chimeraBTC" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaTwitter size={24} /></a>
-                  <a href="https://t.me/gh0stc0in" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaTelegramPlane size={24} /></a>
+                  {/* Hidden for now, will be restored later
                   <a href="https://discord.gg/gh0stlabs" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaDiscord size={24} /></a>
                   <a href="https://docs.gh0stlabs.io" className="text-gray-400 mx-2 hover:text-white" target="_blank" rel="noopener noreferrer"><FaBook size={24} /></a>
+                  */}
                 </div>
               </footer>
             </div>
