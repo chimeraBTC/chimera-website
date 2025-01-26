@@ -89,7 +89,7 @@ export const NewBackground = ({
     return () => window.removeEventListener('resize', handleResize);
   }, [blur]);
 
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally omitting init and render to prevent reinitialization
   useEffect(() => {
     init();
     const animate = () => {
@@ -102,7 +102,7 @@ export const NewBackground = ({
         cancelAnimationFrame(animationId.current);
       }
     };
-  }, []); // Intentionally empty to prevent reinitialize on scroll
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [isSafari, setIsSafari] = useState(false);
   useEffect(() => {
