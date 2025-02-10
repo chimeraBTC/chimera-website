@@ -455,7 +455,7 @@ export default function Home() {
                           Making Blue Chips Accessible
                         </h3>
                         <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                          Our hybrid inscription protocol fractionalizes the top Ordinal collections, enabling them to trade as fungible "floor price index tokens". These Runes tokens can be swapped back for the underlying Inscriptions at any time.
+                          Our hybrid inscription protocol fractionalizes the top Ordinal collections, enabling them to trade as fungible &ldquo;floor price index tokens&rdquo;. These Runes tokens can be swapped back for the underlying Inscriptions at any time.
                         </p>
                         <ul className="space-y-4 text-gray-300">
                           <li className="flex items-center">

@@ -22,16 +22,23 @@ interface IHeader {
 }
 
 export default function Header(props: IHeader) {
+  const {
+    setPaymentAddress,
+    setOrdinalAddress,
+    setOrdinalPubkey,
+    setPaymentPubkey
+  } = props;
+
   useEffect(() => {
     const userAddress = localStorage.getItem("paymentAddress");
-    props.setPaymentAddress(userAddress ? userAddress : "");
+    setPaymentAddress(userAddress ? userAddress : "");
     const ordinalAddress = localStorage.getItem("ordinalAddress");
-    props.setOrdinalAddress(ordinalAddress ? ordinalAddress : "");
+    setOrdinalAddress(ordinalAddress ? ordinalAddress : "");
     const ordinalPubkey = localStorage.getItem("ordinalPubkey");
-    props.setOrdinalPubkey(ordinalPubkey ? ordinalPubkey : "");
+    setOrdinalPubkey(ordinalPubkey ? ordinalPubkey : "");
     const paymentPubkey = localStorage.getItem("paymentPubkey");
-    props.setPaymentPubkey(paymentPubkey ? paymentPubkey : "");
-  }, []);
+    setPaymentPubkey(paymentPubkey ? paymentPubkey : "");
+  }, [setPaymentAddress, setOrdinalAddress, setOrdinalPubkey, setPaymentPubkey]);
 
   return (
     <>
