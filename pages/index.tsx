@@ -552,7 +552,7 @@ export default function Home() {
                           transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
                           className="text-xl font-bold mb-4"
                         >
-                          Back by Blue Chip Assets
+                          Backed by Blue Chips
                         </motion.h3>
                         <p className="text-gray-300">
                         The index fund is backed by a combination of top 10 BTC assets across Ordinals, Runes & BRC20.
