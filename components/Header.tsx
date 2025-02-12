@@ -69,7 +69,11 @@ export default function Header(props: IHeader) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Link href="/comingsoon">
+            <a
+              href="https://app.chimera.finance"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <motion.button
                 className="relative px-6 py-2 text-base font-semibold text-white rounded-lg"
                 whileHover={{
@@ -86,7 +90,7 @@ export default function Header(props: IHeader) {
                 <div className="absolute inset-[1px] rounded-lg bg-black/95 backdrop-blur-sm" />
                 <span className="relative z-10">Launch dApp</span>
               </motion.button>
-            </Link>
+            </a>
           </motion.div>
         </div>
       </motion.header>
