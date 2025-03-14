@@ -146,7 +146,7 @@ export default function Home() {
               <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 {/* Left Column - Header */}
                 <motion.div
-                  className="flex flex-col space-y-4 lg:pr-0"
+                  className="flex flex-col space-y-4 lg:pr-0 mb-8 md:mb-0"
                   {...getAnimationProps({
                     initial: { opacity: 0, y: 50, scale: 0.95 },
                     animate: { opacity: 1, y: 0, scale: 1 },
@@ -196,7 +196,7 @@ export default function Home() {
               {/* Blinking Down Arrow */}
               {showArrow && (
                 <motion.div 
-                  className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40"
+                  className="fixed bottom-12 md:bottom-20 left-1/2 transform -translate-x-1/2 z-40"
                   {...getAnimationProps({
                     initial: { opacity: 1 },
                     exit: { opacity: 0 },
@@ -214,7 +214,7 @@ export default function Home() {
             </section>
 
             {/* Decentralized ETFs Section */}
-            <section className="w-full py-24 px-8 relative">
+            <section className="w-full py-12 md:py-24 px-8 relative">
               <div className="max-w-7xl mx-auto">
                 <motion.div
                   {...getAnimationProps({
@@ -223,7 +223,7 @@ export default function Home() {
                     viewport: { once: true, margin: "100px" },
                     transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] }
                   })}
-                  className="text-center mb-24 pt-48"
+                  className="text-center mb-12 md:mb-24 pt-24 md:pt-48"
                 >
                   <motion.h2
                     {...getAnimationProps({
@@ -324,7 +324,7 @@ export default function Home() {
             </section>
 
             {/* Tokenized Inscriptions Section */}
-            <section className="w-full py-24 px-8 relative">
+            <section className="w-full py-12 md:py-24 px-8 relative">
               <div className="max-w-7xl mx-auto">
                 <motion.div
                   {...getAnimationProps({
@@ -333,7 +333,7 @@ export default function Home() {
                     viewport: { once: true, margin: "100px" },
                     transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] }
                   })}
-                  className="text-center mb-8 pt-24"
+                  className="text-center mb-12 md:mb-24 pt-24 md:pt-48"
                 >
                   <motion.h2
                     {...getAnimationProps({
@@ -473,7 +473,7 @@ export default function Home() {
             </section>
 
             {/* BTC10 Index Fund Section */}
-            <section className="w-full py-24 px-8 relative">
+            <section className="w-full py-12 md:py-24 px-8 relative">
               <div className="max-w-7xl mx-auto">
                 <motion.div
                   {...getAnimationProps({
@@ -482,7 +482,7 @@ export default function Home() {
                     viewport: { once: true, margin: "100px" },
                     transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] }
                   })}
-                  className="text-center mb-24 pt-48"
+                  className="text-center mb-12 md:mb-24 pt-24 md:pt-48"
                 >
                   <motion.h2
                     {...getAnimationProps({
@@ -532,7 +532,7 @@ export default function Home() {
                         viewport: { once: true, margin: "-20%" },
                         transition: { duration: 1, delay: 0.1, ease: "easeOut" }
                       })}
-                      className="text-xl font-bold mb-4"
+                      className="text-xl font-bold mb-4 text-white"
                     >
                       Weighted by Market Cap
                     </motion.h3>
@@ -558,7 +558,7 @@ export default function Home() {
                         viewport: { once: true, margin: "-20%" },
                         transition: { duration: 1, delay: 0.2, ease: "easeOut" }
                       })}
-                      className="text-xl font-bold mb-4"
+                      className="text-xl font-bold mb-4 text-white"
                     >
                       Provably Backed 1:1
                     </motion.h3>
@@ -584,7 +584,7 @@ export default function Home() {
                         viewport: { once: true, margin: "-20%" },
                         transition: { duration: 1, delay: 0.3, ease: "easeOut" }
                       })}
-                      className="text-xl font-bold mb-4"
+                      className="text-xl font-bold mb-4 text-white"
                     >
                       AI Powered Portfolio Management
                     </motion.h3>
@@ -610,7 +610,7 @@ export default function Home() {
                         viewport: { once: true, margin: "-20%" },
                         transition: { duration: 1, delay: 0.4, ease: "easeOut" }
                       })}
-                      className="text-xl font-bold mb-4"
+                      className="text-xl font-bold mb-4 text-white"
                     >
                       S&P500 of BTC
                     </motion.h3>
@@ -623,7 +623,7 @@ export default function Home() {
             </section>
 
             {/* Collaborators and Partners Section */}
-            <section className="w-full py-24 px-8 relative">
+            <section className="w-full py-12 md:py-24 px-8 relative">
               <div className="max-w-7xl mx-auto">
                 <motion.div
                   {...getAnimationProps({
@@ -632,7 +632,7 @@ export default function Home() {
                     viewport: { once: true, margin: "100px" },
                     transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] }
                   })}
-                  className="text-center mb-24"
+                  className="text-center mb-12 md:mb-24 pt-24 md:pt-48"
                 >
                   <motion.h2
                     {...getAnimationProps({
@@ -653,7 +653,7 @@ export default function Home() {
                 </motion.div>
 
                 {/* Logo Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-24 md:gap-48 items-center justify-items-center max-w-5xl mx-auto px-8 mb-48">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-24 md:gap-48 items-center justify-items-center max-w-5xl mx-auto px-8 mb-24 md:mb-48 pb-12 md:pb-24">
                   <motion.div
                     {...getAnimationProps({
                       initial: { opacity: 0, scale: 0.8 },
@@ -692,11 +692,11 @@ export default function Home() {
             </section>
 
             {/* Bottom Glow Effect */}
-            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 translate-y-[20%] w-[4000px] h-[2000px] opacity-20 pointer-events-none z-10">
+            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 translate-y-[20%] w-[4000px] h-[2000px] opacity-10 pointer-events-none z-10">
               <div 
                 className="w-full h-full rounded-[50%]"
                 style={{
-                  background: 'radial-gradient(circle at 50% 100%, #FF4500 0%, rgba(255, 69, 0, 0.3) 25%, rgba(255, 69, 0, 0) 50%)',
+                  background: 'radial-gradient(circle at 50% 100%, #FF4500 0%, rgba(255, 69, 0, 0.2) 25%, rgba(255, 69, 0, 0) 50%)',
                   filter: 'blur(120px)',
                 }}
               />
