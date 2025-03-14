@@ -50,7 +50,13 @@ export default function Home() {
   // Function to conditionally apply animation props based on device
   const getAnimationProps = (props: any) => {
     if (isMobile) {
-      return {}; // No animations for mobile
+      // For mobile: disable animations but ensure visibility
+      return {
+        initial: { opacity: 1 }, // Start visible
+        animate: { opacity: 1 }, // Stay visible
+        whileInView: { opacity: 1 }, // Remain visible when in view
+        transition: { duration: 0 } // No transition
+      };
     }
     return props; // Return animation props for desktop
   };
@@ -244,7 +250,7 @@ export default function Home() {
                     })}
                     className="text-xl md:text-2xl lg:text-3xl text-gray-300 max-w-6xl mx-auto font-semibold leading-relaxed mb-4"
                   >
-                    Our core innovation is a protocol for tokenized, "DEX Traded Funds" on Bitcoin layer 1 that bundle together a basket of BTC assets. Allowing holders to not only trade the ETFs on-chain, but also to redeem the underlying assets with 1 click.
+                    Our core innovation is a protocol for tokenized, &ldquo;DEX Traded Funds&rdquo; on Bitcoin layer 1 that bundle together a basket of BTC assets. Allowing holders to not only trade the ETFs on-chain, but also to redeem the underlying assets with 1 click.
                   </motion.p>
 
                   {/* ETF Infographic */}
@@ -504,7 +510,7 @@ export default function Home() {
                     })}
                     className="text-xl md:text-2xl text-gray-300 max-w-6xl mx-auto font-semibold leading-relaxed mb-16"
                   >
-                    The BTC10 ETF is our flagship product that provides diversified exposure to the top 10 assets in the Bitcoin ecosystem. It's designed to be the simplest way to gain broad market exposure without having to research, purchase, and manage multiple assets individually.
+                    The BTC10 ETF is our flagship product that provides diversified exposure to the top 10 assets in the Bitcoin ecosystem. It&apos;s designed to be the simplest way to gain broad market exposure without having to research, purchase, and manage multiple assets individually.
                   </motion.p>
                 </motion.div>
 
@@ -531,7 +537,7 @@ export default function Home() {
                       Weighted by Market Cap
                     </motion.h3>
                     <p className="text-gray-300">
-                      Bundled & weighted by market cap so you'll always have exposure to the most valuable Bitcion assets.
+                      Bundled &amp; weighted by market cap so you&apos;ll always have exposure to the most valuable Bitcion assets.
                     </p>
                   </motion.div>
 
