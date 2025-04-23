@@ -63,35 +63,6 @@ export default function Header(props: IHeader) {
               className="h-8 w-auto"
             />
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <a
-              href="https://app.chimera.finance"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <motion.button
-                className="relative px-6 py-2 text-base font-semibold text-white rounded-lg"
-                whileHover={{
-                  scale: 1.02,
-                  transition: { duration: 0.2 },
-                }}
-                whileTap={{ scale: 0.98 }}
-                onClick={props.unisatConnectWallet}
-              >
-                <div
-                  className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#FFA200] via-[#FF3000] to-[#FFA200]"
-                  style={gradientAnimation}
-                />
-                <div className="absolute inset-[1px] rounded-lg bg-black/95 backdrop-blur-sm" />
-                <span className="relative z-10">Launch dApp</span>
-              </motion.button>
-            </a>
-          </motion.div>
         </div>
       </motion.header>
     </>
